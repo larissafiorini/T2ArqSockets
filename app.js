@@ -60,6 +60,11 @@ function onClientConnected(sock) {
         console.log("1 document inserted");
         db.close();
       });
+      dbo.collection("lancamentos").find({}).toArray(function(err, result) {
+        if (err) throw err;
+        console.log(result);
+        db.close();
+      })
     });
     console.log(data);
   });
