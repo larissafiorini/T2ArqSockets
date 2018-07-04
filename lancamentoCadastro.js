@@ -8,4 +8,4 @@ function lancamentoCadastro (dbo) {
   });
 }
 
-module.exports.lancamentoDAO = lancamentoDAO;
+module.exports.lancamentoCadastro = lancamentoCadastro;
