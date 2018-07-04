@@ -80,7 +80,7 @@ function onClientConnected(sock) {
       var dbo = db.db("mydb");
 //      dbo.dropDatabase();
       //salva lancamento
-      lancamentoCadastro(dbo);
+      lancamentoCadastro.lancamentoCadastro(db, obj);
       //busca todos os lancamentos
       dbo.collection("lancamentos").find({}).toArray(function(err, result) {
         if (err) throw err;
