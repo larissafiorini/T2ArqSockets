@@ -11,4 +11,4 @@ function produtoBuscar (db, socket) {
   })
 }
 
-module.exports.lancamentoBuscar = lancamentoBuscar;
+module.exports.produtoBuscar = produtoBuscar;
