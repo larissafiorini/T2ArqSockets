@@ -89,6 +89,7 @@ function onClientConnected(sock) {
         //manda json do server para o cliente
         socket.sendEndMessage(result);
       })
+    });
 
       // var produto = {
       //   "anunciante": "John Doe",
