@@ -49,7 +49,18 @@ function onClientConnected(sock) {
     sock.write(' exit');
     // socket json
     socket = new JsonSocket(sock);
-
+    var objString = String(data); //o data vem do client com um #63 na frente, tive que trocar para string, remover os 3 chars e mudar pra json de novo, senao nao funcionava
+    objString = objString.substring(3);
+    var obj = JSON.parse(objString)
+    MongoClient.connect(url, function(err, db){
+      if(err) throw err;
+      var dbo = db.db("mydb");
+      dbo.collection("lancamentos").insertOne(obj, function(err, res) {
+        if(err) throw err;
+        console.log("1 document inserted");
+        db.close();
+      });
+    });
     console.log(data);
   });
   sock.on('close',  function () {
