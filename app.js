@@ -19,7 +19,7 @@ var PORT = 1234;
 // Create Server instance
 //var server = net.createServer(onClientConnected);
 var serv = require('./singleton');
-var lancamentoDAO = require('./lancamentoDAO');
+var lancamentoCadastro = require('./lancamentoCadastro');
 var server = serv.singleton(onClientConnected);
 //console.log(onClientConnected);
 
