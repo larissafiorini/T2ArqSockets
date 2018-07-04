@@ -17,8 +17,10 @@ var HOST = '192.168.15.7';
 var PORT = 1234;
 
 // Create Server instance
-var server = net.createServer(onClientConnected);
-
+//var server = net.createServer(onClientConnected);
+var serv = require('./singleton');
+var server = serv.singleton(onClientConnected);
+//console.log(onClientConnected);
 
 var MongoClient = require('mongodb').MongoClient;
 //Create a database named "mydb":
