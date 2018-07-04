@@ -20,6 +20,10 @@ var PORT = 1234;
 //var server = net.createServer(onClientConnected);
 var serv = require('./singleton');
 var lancamentoCadastro = require('./lancamentoCadastro');
+var lancamentoBuscar = require('./lancamentoBuscar');
+var produtoBuscar = require('./produtoBuscar');
+var produtoCadastro = require('./produtoCadastro');
+
 var server = serv.singleton(onClientConnected);
 //console.log(onClientConnected);
 
@@ -79,16 +83,20 @@ function onClientConnected(sock) {
       if(err) throw err;
       var dbo = db.db("mydb");
 //      dbo.dropDatabase();
+      if (objString.includes("nomeProduto")) {
+        lancamentoCadastro.lancamentoCadastro(db, obj);
+        //busca todos os lancamentos
+        lancamentoBuscar.lancamentoBuscar(db, socket);
+      }
+      else if(objString.includes("produto")){
+        produtoBuscar.produtoCadastro(db, obj);
+        produtoBuscar.produtoBuscar(db, socket);
+      }
+      else {
+        produtoBuscar.produtoBuscar(db, socket);
+      }
       //salva lancamento
-      lancamentoCadastro.lancamentoCadastro(db, obj);
-      //busca todos os lancamentos
-      dbo.collection("lancamentos").find({}).toArray(function(err, result) {
-        if (err) throw err;
-        console.log(result);
-        db.close();
-        //manda json do server para o cliente
-        socket.sendEndMessage(result);
-      })
+
     });
 
       // var produto = {
