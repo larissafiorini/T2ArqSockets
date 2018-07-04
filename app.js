@@ -13,7 +13,7 @@ let LançamentoSchema = new Schema({
 
 let Lançamento = mongoose.model('Lançamento', LançamentoSchema);
 // Configuration parameters
-var HOST = '192.168.0.9';
+var HOST = '192.168.15.7';
 var PORT = 1234;
 
 // Create Server instance
@@ -69,6 +69,8 @@ function onClientConnected(sock) {
       })
     });
     console.log(data);
+	//manda json do server para o cliente
+	socket.sendEndMessage({result: 2});
   });
   sock.on('close',  function () {
     console.log('connection from %s closed', remoteAddress);
