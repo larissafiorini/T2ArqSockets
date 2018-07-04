@@ -13,7 +13,7 @@ let LançamentoSchema = new Schema({
 
 let Lançamento = mongoose.model('Lançamento', LançamentoSchema);
 // Configuration parameters
-var HOST = '192.168.15.7';
+var HOST = '192.168.0.134';
 var PORT = 1234;
 
 // Create Server instance
@@ -45,10 +45,13 @@ function onClientConnected(sock) {
   var remoteAddress = sock.remoteAddress + ':' + sock.remotePort;
   console.log('new client connected: %s', remoteAddress);
 
+ 
+  
+
   sock.on('data', function(data) {
     console.log('%s Says: %s', remoteAddress, data);
-    sock.write(data);
-    sock.write(' exit');
+    //sock.write(data);
+    //sock.write(' exit');
     // socket json
     socket = new JsonSocket(sock);
     var objString = String(data); //o data vem do client com um #63 na frente, tive que trocar para string, remover os 3 chars e mudar pra json de novo, senao nao funcionava
@@ -57,6 +60,7 @@ function onClientConnected(sock) {
     MongoClient.connect(url, function(err, db){
       if(err) throw err;
       var dbo = db.db("mydb");
+//      dbo.dropDatabase();
       //salva lancamento
       dbo.collection("lancamentos").insertOne(obj, function(err, res) {
         if(err) throw err;
@@ -68,11 +72,32 @@ function onClientConnected(sock) {
         if (err) throw err;
         console.log(result);
         db.close();
+        //manda json do server para o cliente
+        socket.sendEndMessage(result);
       })
-    });
+
+      var produto = {
+        "anunciante": "John Doe",
+        "produto": "Gameboy",
+        "valorInicial": 200
+        };
+        dbo.collection("produtos").insertOne(produto, function(err, res) {
+          if(err) throw err;
+          db.close();
+        });
+        dbo.collection("produtos").find({}).toArray(function(err, result) {
+          if (err) throw err;
+          console.log(result);
+          socket.sendEndMessage(result);
+          db.close();
+        });
+      });
+ 
+
+   
     console.log(data);
-	//manda json do server para o cliente
-	socket.sendEndMessage({result: 2});
+	
+	
   });
   sock.on('close',  function () {
     console.log('connection from %s closed', remoteAddress);
