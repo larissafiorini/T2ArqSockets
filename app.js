@@ -13,10 +13,10 @@ let LançamentoSchema = new Schema({
 
 let Lançamento = mongoose.model('Lançamento', LançamentoSchema);
 // Configuration parameters
-var HOST = '192.168.0.134';
+var HOST = '192.168.0.9';
 var PORT = 1234;
 
-// Create Server instance 
+// Create Server instance
 var server = net.createServer(onClientConnected);
 
 
@@ -39,17 +39,18 @@ server.listen(PORT, HOST, function () {
 
 
 
-function onClientConnected(sock) {  
+function onClientConnected(sock) {
   var remoteAddress = sock.remoteAddress + ':' + sock.remotePort;
   console.log('new client connected: %s', remoteAddress);
- 
+
   sock.on('data', function(data) {
     console.log('%s Says: %s', remoteAddress, data);
     sock.write(data);
     sock.write(' exit');
     // socket json
     socket = new JsonSocket(sock);
-    console.log(socket);
+
+    console.log(data);
   });
   sock.on('close',  function () {
     console.log('connection from %s closed', remoteAddress);
