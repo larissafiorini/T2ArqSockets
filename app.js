@@ -55,11 +55,13 @@ function onClientConnected(sock) {
     MongoClient.connect(url, function(err, db){
       if(err) throw err;
       var dbo = db.db("mydb");
+      //salva lancamento
       dbo.collection("lancamentos").insertOne(obj, function(err, res) {
         if(err) throw err;
         console.log("1 document inserted");
         db.close();
       });
+      //busca todos os lancamentos
       dbo.collection("lancamentos").find({}).toArray(function(err, result) {
         if (err) throw err;
         console.log(result);
