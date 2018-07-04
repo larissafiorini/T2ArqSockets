@@ -64,6 +64,7 @@ function onClientConnected(sock) {
       socket.sendEndMessage(result);
       db.close();
     })
+  });
 
   sock.on('data', function(data) {
     console.log('%s Says: %s', remoteAddress, data);
