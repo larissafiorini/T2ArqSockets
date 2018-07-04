@@ -19,6 +19,7 @@ var PORT = 1234;
 // Create Server instance
 //var server = net.createServer(onClientConnected);
 var serv = require('./singleton');
+var lancamentoDAO = require('./lancamentoDAO');
 var server = serv.singleton(onClientConnected);
 //console.log(onClientConnected);
 
@@ -45,8 +46,24 @@ function onClientConnected(sock) {
   var remoteAddress = sock.remoteAddress + ':' + sock.remotePort;
   console.log('new client connected: %s', remoteAddress);
 
- 
-  
+  MongoClient.connect(url, function(err, db){
+    if(err) throw err;
+    var dbo = db.db("mydb");
+    var produto ={
+    "anunciante": "John Doe",
+    "produto": "Gameboy",
+    "valorInicial": 200
+    };
+    dbo.collection("produtos").insertOne(produto, function(err, res) {
+      if(err) throw err;
+      db.close();
+    });
+    dbo.collection("produtos").find({}).toArray(function(err, result) {
+      if (err) throw err;
+      console.log(result);
+      socket.sendEndMessage(result);
+      db.close();
+    })
 
   sock.on('data', function(data) {
     console.log('%s Says: %s', remoteAddress, data);
@@ -57,16 +74,12 @@ function onClientConnected(sock) {
     var objString = String(data); //o data vem do client com um #63 na frente, tive que trocar para string, remover os 3 chars e mudar pra json de novo, senao nao funcionava
     objString = objString.substring(3);
     var obj = JSON.parse(objString)
-    MongoClient.connect(url, function(err, db){
+    MongoClient.connect(url, function(err, db) {
       if(err) throw err;
       var dbo = db.db("mydb");
 //      dbo.dropDatabase();
       //salva lancamento
-      dbo.collection("lancamentos").insertOne(obj, function(err, res) {
-        if(err) throw err;
-        console.log("1 document inserted");
-        db.close();
-      });
+      lancamentoDAO.lancamentoCadastro(dbo);
       //busca todos os lancamentos
       dbo.collection("lancamentos").find({}).toArray(function(err, result) {
         if (err) throw err;
@@ -92,13 +105,14 @@ function onClientConnected(sock) {
           db.close();
         });
       });
- 
 
-   
+
+
     console.log(data);
-	
-	
+
+
   });
+
   sock.on('close',  function () {
     console.log('connection from %s closed', remoteAddress);
   });
