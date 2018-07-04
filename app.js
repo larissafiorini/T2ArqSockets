@@ -46,25 +46,25 @@ function onClientConnected(sock) {
   var remoteAddress = sock.remoteAddress + ':' + sock.remotePort;
   console.log('new client connected: %s', remoteAddress);
 
-  MongoClient.connect(url, function(err, db){
-    if(err) throw err;
-    var dbo = db.db("mydb");
-    var produto ={
-    "anunciante": "John Doe",
-    "produto": "Gameboy",
-    "valorInicial": 200
-    };
-    dbo.collection("produtos").insertOne(produto, function(err, res) {
-      if(err) throw err;
-      db.close();
-    });
-    dbo.collection("produtos").find({}).toArray(function(err, result) {
-      if (err) throw err;
-      console.log(result);
-      socket.sendEndMessage(result);
-      db.close();
-    })
-  });
+  // MongoClient.connect(url, function(err, db){
+  //   if(err) throw err;
+  //   var dbo = db.db("mydb");
+  //   var produto ={
+  //   "anunciante": "John Doe",
+  //   "produto": "Gameboy",
+  //   "valorInicial": 200
+  //   };
+  //   dbo.collection("produtos").insertOne(produto, function(err, res) {
+  //     if(err) throw err;
+  //     db.close();
+  //   });
+  //   dbo.collection("produtos").find({}).toArray(function(err, result) {
+  //     if (err) throw err;
+  //     console.log(result);
+  //     socket.sendEndMessage(result);
+  //     db.close();
+  //   })
+  // });
 
   sock.on('data', function(data) {
     console.log('%s Says: %s', remoteAddress, data);
@@ -90,25 +90,22 @@ function onClientConnected(sock) {
         socket.sendEndMessage(result);
       })
 
-      var produto = {
-        "anunciante": "John Doe",
-        "produto": "Gameboy",
-        "valorInicial": 200
-        };
-        dbo.collection("produtos").insertOne(produto, function(err, res) {
-          if(err) throw err;
-          db.close();
-        });
-        dbo.collection("produtos").find({}).toArray(function(err, result) {
-          if (err) throw err;
-          console.log(result);
-          socket.sendEndMessage(result);
-          db.close();
-        });
-      });
-
-
-
+      // var produto = {
+      //   "anunciante": "John Doe",
+      //   "produto": "Gameboy",
+      //   "valorInicial": 200
+      //   };
+      //   dbo.collection("produtos").insertOne(produto, function(err, res) {
+      //     if(err) throw err;
+      //     db.close();
+      //   });
+      //   dbo.collection("produtos").find({}).toArray(function(err, result) {
+      //     if (err) throw err;
+      //     console.log(result);
+      //     socket.sendEndMessage(result);
+      //     db.close();
+      //   });
+      // });
     console.log(data);
 
 
